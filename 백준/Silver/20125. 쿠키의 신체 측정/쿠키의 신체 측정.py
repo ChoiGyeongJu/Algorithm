@@ -19,35 +19,22 @@ for i in range(1, n - 1):
 
 print(heart[0] + 1, heart[1] + 1)
 
-dx = [0, 0, 1]
-dy = [-1, 1, 0]
 
-def get_len(x, y, direct):
-    cnt = 0
-    nx = x
-    ny = y
+arm = graph[heart[0]]
+left_arm = list(arm[:heart[1]]).count('*')
+right_arm = list(arm).count('*') - left_arm - 1
+
+body = -2
+left_leg = -1
+right_leg = -1
+for i in range(n):
+    if graph[i][heart[1]] == '*':
+        body += 1
+
+    if graph[i][heart[1] - 1] == '*':
+        left_leg += 1
     
-    while True:
-        nx += dx[direct]
-        ny += dy[direct]
+    if graph[i][heart[1] + 1] == '*':
+        right_leg += 1
 
-        if 0 <= nx < n and 0 <= ny < n:
-            if graph[nx][ny] == '*':
-                cnt += 1
-
-            else:
-                break
-        else:
-            break
-
-    return cnt
-
-mid = get_len(heart[0], heart[1], 2)
-for i in range(5):
-    if i <= 2:
-        print(get_len(heart[0], heart[1], i), end = ' ')
-    elif i == 3:
-        print(get_len(heart[0] + mid, heart[1] - 1, 2), end = ' ')
-
-    else:
-        print(get_len(heart[0] + mid, heart[1] + 1, 2))
+print(left_arm, right_arm, body, left_leg, right_leg, sep=' ')
