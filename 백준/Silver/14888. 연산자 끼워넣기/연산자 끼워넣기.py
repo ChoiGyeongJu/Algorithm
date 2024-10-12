@@ -32,7 +32,6 @@ def dfs(value, cnt, cal):
         else:
             dfs(value // numList[cnt], cnt + 1, cal)
         cal[3] += 1
-    return res
 
 dfs(numList[0], 1, commands)
 print(max(res), min(res), sep='\n')
