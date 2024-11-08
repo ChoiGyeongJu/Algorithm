@@ -19,18 +19,15 @@ rl.on('close', () => {
   const arr = lines[1].split(' ').map(Number)
   // arr에서 연속된 k개의 숫자의 합이 가장 큰 값 출력
 
-  let tmp = 0
-  for (let i = 0; i < k; i++) {
-    tmp += arr[i]
+  const prefix = [0]
+  for (let i = 0; i < n; i++) {
+    prefix[i + 1] = prefix[i] + arr[i]
   }
-  let answer = tmp
-  let front = 0
-  let rear = k - 1
-  while (rear < n) {
-    tmp -= arr[front++]
-    tmp += arr[++rear]
 
-    if (tmp > answer) answer = tmp
+
+  let answer = Number.MIN_SAFE_INTEGER
+  for (let i = k; i <= n; i++) {
+    answer = Math.max(answer, prefix[i] - prefix[i - k])
   }
   console.log(answer)
 });
