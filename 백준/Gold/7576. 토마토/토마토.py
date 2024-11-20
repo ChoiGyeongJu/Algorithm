@@ -1,38 +1,52 @@
 from collections import deque
 
-dx = [0, 0, 1, -1]
-dy = [1, -1, 0, 0]
-
 m, n = map(int, input().split())
-
 graph = []
-for _ in range(n):
+visited = [[False for _ in range(m)] for _ in range(n)]
+for i in range(n):
     arr = list(map(int, input().split()))
     graph.append(arr)
 
 queue = deque([])
 for i in range(n):
     for j in range(m):
-        if (graph[i][j] == 1):
-            queue.append([i, j])
+        if graph[i][j] == 1:
+            queue.append((i, j, 0))
+            visited[i][j] = True
 
+day = 0
+
+# 익은 토마토는 1, 익지 않은 토마토는 0, 비어있는 칸은 -1
 while queue:
-    a, b = queue.popleft()
+    x, y, day = queue.popleft()
+    
+    if x < n - 1 and graph[x + 1][y] != -1 and visited[x + 1][y] == False:
+        queue.append((x+1, y, day + 1))
+        graph[x + 1][y] = 1
+        visited[x + 1][y] = True
 
-    for i in range(4):
-        nx = dx[i] + a
-        ny = dy[i] + b
-        if nx < 0 or nx >= n or ny < 0 or ny >= m:
-            continue
-        if graph[nx][ny] == 0:
-            graph[nx][ny] = graph[a][b] + 1
-            queue.append([nx, ny])
+    if y < m - 1 and graph[x][y + 1] != -1 and visited[x][y + 1] == False:
+        queue.append((x, y + 1, day + 1))
+        graph[x][y + 1] = 1
+        visited[x][y + 1] = True
+    
+    if x > 0 and graph[x - 1][y] != -1 and visited[x - 1][y] == False:
+        queue.append((x - 1, y, day + 1))
+        graph[x - 1][y] = 1
+        visited[x - 1][y] = True
+    
+    if y > 0 and graph[x][y - 1] != -1 and visited[x][y - 1] == False:
+        queue.append((x, y - 1, day + 1))
+        graph[x][y - 1] = 1
+        visited[x][y - 1] = True
 
- 
-ans = 0
+flag = True
 for i in range(n):
     if 0 in graph[i]:
-        print(-1)
-        exit()
-    ans = max(max(graph[i]), ans)
-print(ans - 1)
+        flag = False
+        break
+
+if flag:
+    print(day)
+else:
+    print(-1)
