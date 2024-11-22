@@ -1,36 +1,32 @@
-from itertools import permutations
 import sys
 input = sys.stdin.readline
 
-numList = [0,1,2,3,4,5,6,7,8,9]
 
 k = int(input())
 arr = list(input().split())
 
-# numList에서 k+1개 추출
-def isValid(numStr):
-    index = 0
-    for x in arr:
-        left = numStr[index]
-        right = numStr[index + 1]
-        index += 1
-        if x == '<':
-            if int(left) < int(right):
-                continue
-            else:
-                return False
-        elif x == '>':
-            if int(left) > int(right):
-                continue
-            else:
-                return False
-    return True
+visited = [False] * 10
 
 answer = []
-permute = permutations(numList, k + 1)
-for num in list(permute):
-    x = ''.join(map(str, num))
-    if isValid(x):
-        answer.append(x)
 
+def isValid(a, b, oper):
+    if oper == '<' and a < b:
+        return True
+    if oper == '>' and a > b:
+        return True
+    return False
+
+def dfs(idx, num):
+    if idx == k + 1:
+        answer.append(num)
+        return
+    for i in range(10):
+        if not visited[i]:
+            if idx == 0 or isValid(num[-1], str(i), arr[idx - 1]):
+                visited[i] = True
+                dfs(idx + 1, num + str(i))
+                visited[i] = False
+
+dfs(0, '')
+answer.sort()
 print(answer[-1], answer[0], sep='\n')
