@@ -1,50 +1,38 @@
+import sys
 from collections import deque
 
-answer = []
+input = sys.stdin.readline
+
+dx = [0, 0, 1, -1, -1, 1, -1, 1]
+dy = [1, -1, 0, 0, -1, 1, 1, -1]
+
 while True:
-    w, h = map(int, input().split())  # 너비 w, 높이 h
+    w, h = map(int, input().split())
     if w == 0 and h == 0:
         break
 
-    graph = []
-
+    grid = []
     for i in range(h):
-        arr = list(map(int, input().split()))
-        graph.append(arr)
+        grid.append(list(map(int, input().split())))
 
-    cnt = 0
-
-    def bfs(graph, x, y):
-        global cnt
-        queue = deque([(x, y, cnt)])
-        graph[x][y] = 0
+    visited = [[False]*w for _ in range(h)]
+    def bfs(i, j):
+        visited[i][j] = True
+        queue = deque([(i, j)])
 
         while queue:
-            x, y, cnt = queue.popleft()
-
-            adj = [(x + 1, y), (x, y + 1), (x - 1, y), (x, y - 1),
-                (x - 1, y - 1), (x + 1, y + 1), (x - 1, y + 1), (x + 1, y - 1)
-            ]
-
-            for jump in adj:
-                x_idx = jump[0]
-                y_idx = jump[1]
-
-                if not (0 <= x_idx <= h - 1) or not (0 <= y_idx <= w - 1): 
-                    continue
-                elif graph[x_idx][y_idx] == 1:
-                    graph[x_idx][y_idx] = 0
-                    queue.append((x_idx, y_idx, cnt))            
-            
-        cnt += 1
-        return cnt
-
+            x, y = queue.popleft()
+            for i in range(8):
+                nx, ny = dx[i] + x, dy[i] + y
+                if 0 <= nx < h and 0 <= ny < w:
+                    if not visited[nx][ny] and grid[nx][ny] == 1:
+                        visited[nx][ny] = True
+                        queue.append((nx, ny))
+        
+    answer = 0
     for i in range(h):
         for j in range(w):
-            if graph[i][j] == 1:
-                bfs(graph, i, j)
-
-    answer.append(cnt)
-
-for x in answer:
-    print(x, end='\n')
+            if grid[i][j] == 1 and not visited[i][j]:
+                bfs(i, j)
+                answer += 1
+    print(answer)
