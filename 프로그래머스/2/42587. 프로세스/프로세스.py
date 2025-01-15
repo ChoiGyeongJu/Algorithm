@@ -15,5 +15,3 @@ def solution(priorities, location):
             if index == location:
                 break
     return answer
-
-solution([2, 1, 3, 2], 2)
