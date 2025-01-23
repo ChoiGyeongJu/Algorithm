@@ -5,58 +5,58 @@ const rl = readline.createInterface({
   output: process.stdout,
 });
 
-let lines = []
+let lines = [];
 
 rl.on("line", (input) => {
-    lines.push(input.trim())
-    
-    if (lines.length === parseInt(lines[0]) + 1) {
-        rl.close()
-    }
+  lines.push(input.trim());
+  if (lines.length === Number(lines[0]) + 1) {
+    rl.close();
+  }
 });
 
 rl.on("close", () => {
-    const n = parseInt(lines.shift())
-    let grid = []
-    for (let i = 0; i < n; i++) {
-        grid.push(lines[i].split(''))
-    }
+  const n = Number(lines[0]);
+  const grid = [];
+  for (let i = 1; i < n + 1; i++) {
+    grid.push(lines[i].split("").map(Number));
+  }
 
-    const dx = [0, 0, 1, -1]
-    const dy = [1, -1, 0, 0]
-    function bfs(x, y) {
-        let queue = [[x, y]]
-        grid[x][y] = 0
-        let cnt = 1
+  const dx = [0, 0, 1, -1];
+  const dy = [1, -1, 0, 0];
 
-        while (queue.length > 0) {
-            const [x, y]= queue.shift()
-            for (let i = 0; i < 4; i++) {
-                const nx = dx[i] + x
-                const ny = dy[i] + y
+  function bfs(x, y) {
+    const q = [];
+    q.push([x, y]);
+    grid[x][y] = 0;
+    let cnt = 1;
 
-                if (0 <= nx && nx < n && 0 <= ny && ny < n) {
-                    if (grid[nx][ny] === '1') {
-                        cnt += 1
-                        queue.push([nx, ny])
-                        grid[nx][ny] = 0
-                    }
-                }
-            }
+    while (q.length) {
+      const [x, y] = q.shift();
+      for (let i = 0; i < 4; i++) {
+        const nx = dx[i] + x,
+          ny = dy[i] + y;
+        if (0 <= nx && nx < n && 0 <= ny && ny < n) {
+          if (grid[nx][ny] === 1) {
+            grid[nx][ny] = 0;
+            cnt++;
+            q.push([nx, ny]);
+          }
         }
-        return cnt
+      }
     }
-    let answer = []
-    for (let i = 0; i < n; i++) {
-        for (let j = 0; j < n; j++) {
-            if (grid[i][j] === '1') {
-                answer.push(bfs(i, j))
-            }
-        }
+    return cnt;
+  }
+
+  const answer = [];
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < n; j++) {
+      if (grid[i][j] === 1) {
+        answer.push(bfs(i, j));
+      }
     }
-    answer.sort((a, b) => a - b)
-    console.log(answer.length)
-    for (const a of answer) {
-        console.log(a)
-    }
+  }
+
+  answer.sort((a, b) => a - b);
+  console.log(answer.length);
+  console.log(answer.join("\n"));
 });
