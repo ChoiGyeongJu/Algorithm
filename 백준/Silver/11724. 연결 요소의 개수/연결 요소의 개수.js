@@ -25,9 +25,17 @@ rl.on("close", () => {
 
   const visited = new Set();
   function dfs(node) {
+    const stack = [node];
     visited.add(node);
-    for (const next of grid[node]) {
-      if (!visited.has(next)) dfs(next);
+
+    while (stack.length) {
+      const node = stack.pop();
+      for (const next of grid[node]) {
+        if (!visited.has(next)) {
+          visited.add(next);
+          stack.push(next);
+        }
+      }
     }
   }
 
