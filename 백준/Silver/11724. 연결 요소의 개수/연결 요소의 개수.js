@@ -24,16 +24,16 @@ rl.on("close", () => {
   }
 
   const visited = new Set();
-  function dfs(node) {
-    const stack = [node];
+  function bfs(node) {
+    const q = [node];
     visited.add(node);
 
-    while (stack.length) {
-      const node = stack.pop();
+    while (q.length) {
+      const node = q.shift();
       for (const next of grid[node]) {
         if (!visited.has(next)) {
           visited.add(next);
-          stack.push(next);
+          q.push(next);
         }
       }
     }
@@ -42,7 +42,7 @@ rl.on("close", () => {
   let answer = 0;
   for (let i = 1; i < n + 1; i++) {
     if (!visited.has(i)) {
-      dfs(i);
+      bfs(i);
       answer++;
     }
   }
