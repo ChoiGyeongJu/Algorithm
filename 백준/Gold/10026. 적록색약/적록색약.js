@@ -52,23 +52,13 @@ rl.on("close", () => {
     b = 0;
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < n; j++) {
-      if (normal[i][j] === "R") {
+      if (normal[i][j] !== "X") {
         a++;
-        bfs(normal, i, j, "R");
-      } else if (normal[i][j] === "G") {
-        a++;
-        bfs(normal, i, j, "G");
-      } else if (normal[i][j] === "B") {
-        a++;
-        bfs(normal, i, j, "B");
+        bfs(normal, i, j, normal[i][j]);
       }
-
-      if (copy[i][j] === "G") {
+      if (copy[i][j] !== "X") {
         b++;
-        bfs(copy, i, j, "G");
-      } else if (copy[i][j] === "B") {
-        b++;
-        bfs(copy, i, j, "B");
+        bfs(copy, i, j, copy[i][j]);
       }
     }
   }
