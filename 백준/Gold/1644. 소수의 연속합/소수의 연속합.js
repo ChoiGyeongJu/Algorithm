@@ -26,11 +26,11 @@ rl.on("close", () => {
         }
       }
     }
-    return v
-      .map((x, i) => {
-        if (!!x) return i;
-      })
-      .filter((y) => !!y);
+
+    return v.reduce((primes, isPrime, i) => {
+      if (isPrime) primes.push(i);
+      return primes;
+    }, []);
   }
 
   const primeNumber = getPrime();
