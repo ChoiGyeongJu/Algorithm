@@ -18,12 +18,13 @@ rl.on("close", () => {
   let start = 0;
   let end = n - 1;
 
-  let answer = [arr[start], arr[end]];
+  const answer = [arr[start], arr[end]];
   while (start < end) {
     const val = arr[start] + arr[end];
 
     if (Math.abs(val) < Math.abs(answer[0] + answer[1])) {
-      answer = [arr[start], arr[end]];
+      answer[0] = arr[start];
+      answer[1] = arr[end];
     }
 
     if (val < 0) {
