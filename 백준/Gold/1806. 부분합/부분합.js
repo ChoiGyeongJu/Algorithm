@@ -1,40 +1,33 @@
-const readline = require('readline');
+const readline = require("readline");
 
 const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
+  input: process.stdin,
+  output: process.stdout,
 });
 
 let lines = [];
-rl.on('line', input => {
-    lines.push(input.trim());
 
-    if (lines.length === 2) {
-        rl.close()
-    }
-})
+rl.on("line", (input) => {
+  lines.push(input.trim());
+});
 
-rl.on('close', () => {
-    const [n, s] = lines.shift().split(' ').map(Number)
-    const numList = lines[0].split(' ').map(Number)
-    
-    if (numList.reduce((acc, cur) => acc + cur, 0) < s) {
-        console.log(0)
-        return
-    }
+rl.on("close", () => {
+  const [n, s] = lines[0].split(" ").map(Number);
+  const arr = lines[1].split(" ").map(Number);
 
-    let answer = n
-    for (let i = 0; i < n; i++) {
-        let tmp = 0
-        let idx = i
-    
-        while (tmp < s && idx < n) {
-            tmp += numList[idx]
-            idx += 1
-        }
-        if (tmp >= s) {
-            answer = Math.min(answer, idx - i)
-        }
+  let start = 0;
+  let end = 0;
+  let sum = 0;
+  let answer = Infinity;
+  while (end < n) {
+    sum += arr[end];
+
+    while (sum >= s) {
+      answer = Math.min(answer, end - start + 1);
+      sum -= arr[start];
+      start++;
     }
-    console.log(answer)
-})
+    end++;
+  }
+  console.log(answer === Infinity ? 0 : answer);
+});
