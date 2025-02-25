@@ -6,32 +6,24 @@ const rl = readline.createInterface({
 });
 
 let lines = [];
-
 rl.on("line", (input) => {
-  lines.push(parseInt(input))
-
-  if (lines.length === lines[0] + 1) {
-    rl.close()
-  }
+  lines.push(input.trim());
 });
 
-// output
 rl.on("close", () => {
-  const T = lines[0]
+  const T = Number(lines[0]);
 
-  let dp = new Array(11).fill(0)
-  dp[1] = 1
-  dp[2] = 2
-  dp[3] = 4
+  let dp = Array.from({ length: 11 }, () => 0);
+  dp[1] = 1;
+  dp[2] = 2;
+  dp[3] = 4;
+
   for (let i = 4; i < 11; i++) {
-    dp[i] = dp[i - 3] + dp[i - 2] + dp[i - 1]
+    dp[i] = dp[i - 1] + dp[i - 2] + dp[i - 3];
   }
-  
+
   for (let i = 0; i < T; i++) {
-    console.log(dp[lines[i + 1]])
+    const n = Number(lines[i + 1]);
+    console.log(dp[n]);
   }
 });
-
-
-
-
