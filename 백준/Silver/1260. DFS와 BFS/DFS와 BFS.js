@@ -6,53 +6,52 @@ const rl = readline.createInterface({
 });
 
 let lines = [];
+rl.on("line", (input) => {
+  lines.push(input.trim());
+});
 
-rl.on('line', input => {
-  lines.push(input.trim())
+rl.on("close", () => {
+  const [n, m, v] = lines[0].split(" ").map(Number);
+  const grid = Array.from({ length: n + 1 }, () => []);
 
-  if (lines.length === lines[0].split(' ').map(Number)[1] + 1) {
-    rl.close()
-  }
-})
-
-rl.on('close', () => {
-  const [N, M, V] = lines.shift().split(' ').map(Number)
-  let graph = Array.from({length: N + 1}, () => [])
-  for (let i = 0; i < M; i++) {
-    let [start, end] = lines.shift().split(' ').map(Number)
-    graph[start].push(end)
-    graph[end].push(start)
-  }
-  for (let i = 1; i < N + 1; i++) {
-    graph[i].sort((a, b) => a - b)
+  for (let i = 0; i < m; i++) {
+    const [x, y] = lines[i + 1].split(" ").map(Number);
+    grid[x].push(y);
+    grid[y].push(x);
   }
 
-  // dfs 결과 출력
-  function dfs(node, visited) {
-    if (!visited.has(node)) {
-      visited.add(node)
-      for (let next of graph[node]) {
-        dfs(next, visited)
+  for (let i = 0; i < n + 1; i++) {
+    grid[i].sort((a, b) => a - b);
+  }
+
+  let visited = new Set([v]);
+  function dfs(v) {
+    for (const x of grid[v]) {
+      if (!visited.has(x)) {
+        visited.add(x);
+        dfs(x);
       }
     }
   }
-  let visited_dfs = new Set()
-  dfs(V, visited_dfs)
-  console.log([...visited_dfs].join(' '))
+  dfs(v);
+  console.log([...visited].join(" "));
 
-  // bfs 결과 출력
-  let queue = []
-  let visited = new Set()
-  queue.push(V)
-  visited.add(V)
-  while (queue.length > 0) {
-    let node = queue.shift()
-    for (let next of graph[node]) {
-      if (!visited.has(next)) {
-        queue.push(next)
-        visited.add(next)
+  visited = new Set([v]);
+  function bfs() {
+    const q = [];
+    q.push(v);
+
+    while (q.length) {
+      const x = q.shift();
+
+      for (const next of grid[x]) {
+        if (!visited.has(next)) {
+          visited.add(next);
+          q.push(next);
+        }
       }
     }
   }
-  console.log([...visited].join(' ')) 
-})
+  bfs();
+  console.log([...visited].join(" "));
+});
